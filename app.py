@@ -26,6 +26,20 @@ def buscar_receita(id):
             return jsonify(receita)
     return jsonify({"erro": "Receita não encontrada"}), 404 
  
+@app.route("/receitas", methods=["POST"])
+def criar_receita():
+    nova_receita = request.get_json()
+    nova_receita["id"] = receitas[-1]["id"] + 1
+    receitas.append(nova_receita)
+    return jsonify(nova_receita), 201
+
+{
+  "nome": "Panqueca",
+  "ingredientes": ["leite", "ovo", "farinha"],
+  "modo_preparo": "Misture tudo e frite."
+}
+
+
 
 
 
