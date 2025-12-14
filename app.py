@@ -19,6 +19,15 @@ receitas = [
 def listar_receitas():
     return jsonify(receitas)
 
+@app.route("/receitas/<int:id>", methods=["GET"])
+def buscar_receita(id):
+    for receita in receitas:
+        if receita["id"] == id:
+            return jsonify(receita)
+    return jsonify({"erro": "Receita não encontrada"}), 404 
+ 
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
