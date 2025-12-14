@@ -40,6 +40,15 @@ def criar_receita():
 }
 
 
+@pp.route("/receitas/<int:id>", methods=["PUT"])
+def atualizar_receita(id):
+    dados = request.get_json()
+    for receita in receitas:
+        if receita["id"] == id:
+            receita.update(dados)
+            return jsonify(receita)
+    return jsonify({"erro": "Receita não encontrada"}), 404
+
 
 
 
