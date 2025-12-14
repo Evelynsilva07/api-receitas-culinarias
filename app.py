@@ -15,6 +15,9 @@ receitas = [
     }
 ]
 
+@app.route("/receitas", methods=["GET"])
+def listar_receitas():
+    return jsonify(receitas)
 
 
 if __name__ == "__main__":
