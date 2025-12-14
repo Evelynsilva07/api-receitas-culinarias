@@ -50,6 +50,13 @@ def atualizar_receita(id):
     return jsonify({"erro": "Receita não encontrada"}), 404
 
 
+@app.route("/receitas/<int:id>", methods=["DELETE"])
+def deletar_receita(id):
+    for receita in receitas:
+        if receita["id"] == id:
+            receitas.remove(receita)
+            return jsonify({"mesagem": "Receita deletada"})
+    return jsonify({"erro": "Receita não encontrada"}), 404
 
 
 if __name__ == "__main__":
