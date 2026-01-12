@@ -1,58 +1,19 @@
-from flask import Flask, jsonify, request
-from db import receitas, gerar_id
+from flask import Flask
+from flask_smorest import Api
+from resources.receita import receita_blp
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET"])
-def home():
-    return jsonify({"mensagem": "API de Receitas Culinárias"})
+app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config["API_TITLE"] = "API de Receitas Culinárias"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-# CREATE
-@app.route("/receitas", methods=["POST"])
-def criar_receita():
-    dados = request.get_json()
-
-    nova_receita = {
-        "id": gerar_id(),
-        "nome": dados.get("nome"),
-        "ingredientes": dados.get("ingredientes"),
-        "modo_preparo": dados.get("modo_preparo")
-    }
-
-    receitas.append(nova_receita)
-    return jsonify(nova_receita), 201
-
-# READ - listar
-@app.route("/receitas", methods=["GET"])
-def listar_receitas():
-    return jsonify(receitas)
-
-# READ - buscar por id
-@app.route("/receitas/<id>", methods=["GET"])
-def buscar_receita(id):
-    for receita in receitas:
-        if receita["id"] == id:
-            return jsonify(receita)
-    return jsonify({"erro": "Receita não encontrada"}), 404
-
-# UPDATE
-@app.route("/receitas/<id>", methods=["PUT"])
-def atualizar_receita(id):
-    dados = request.get_json()
-    for receita in receitas:
-        if receita["id"] == id:
-            receita.update(dados)
-            return jsonify(receita)
-    return jsonify({"erro": "Receita não encontrada"}), 404
-
-# DELETE
-@app.route("/receitas/<id>", methods=["DELETE"])
-def deletar_receita(id):
-    for receita in receitas:
-        if receita["id"] == id:
-            receitas.remove(receita)
-            return jsonify({"mensagem": "Receita removida com sucesso"})
-    return jsonify({"erro": "Receita não encontrada"}), 404
+api = Api(app)
+api.register_blueprint(receita_blp)
 
 if __name__ == "__main__":
     app.run(debug=True)
